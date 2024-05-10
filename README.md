@@ -1,5 +1,4 @@
 # Zadanie10_Project-MVC
-Zadanie 10 – System zarządzania listą zadań do przeczytania.
 # Tytuł i nazwa wybranego projektu
 System zarządzania listą zadań do przeczytania ( Zadanie 10 )
 # Spis treści
