@@ -1,0 +1,106 @@
+<script src="/public/js/main.js"></script>
+
+<div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3">
+    <h1 class="h1">List of my books to read</h1>
+    <div class="btn-toolbar mb-2 mb-md 0">
+      <div class="btn-group me-2">
+        <a href="/add" class="btn btn-sm btn-outline-primary">+ New Book</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="table">
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Title</th>
+          <th scope="col">Author</th>
+          <th scope="col">Genre</th>
+          <th scope="col">Date(year)</th>
+          <th scope="col">Notes</th>
+          <th scope="col" class="text-end">Action</th>
+        </tr>
+      </thead>
+  
+      <tbody class="table-group-divider">
+        <% books.forEach(element => { %>
+          <tr class="align-middle <% if (element.isRead) { %>table-danger text-decoration-line-through<% } %>">
+            <td>
+                <form action="/toggleRead/<%= element._id %>?_method=PUT" method="POST">
+                    <button type="submit" class="toggle-read btn btn-sm" name="isRead" value="<%= !element.isRead %>">
+                        <i class="bi <%= element.isRead ? 'bi-check-square' : 'bi-square' %>"></i>
+                    </button>
+                </form>
+            </td>
+            <td>"<%= element.title %>"</td>
+            <td><%= element.author %></td>
+            <td><%= element.genre %></td>
+            <td><%= element.year %></td>
+            <td>
+                <div class="btn-group">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Book notes
+                    </button>
+                    <div class="dropdown-menu p-2 text-body-primary text-break" style="max-width: 200px;">
+                        <p><%= element.notes %></p>
+                    </div>
+                </div>
+            </td>
+            <td class="text-end">  
+              <div class="d-flex flex-row justify-content-end gap-2">
+                <a href="/edit/<%= element._id %>" type="button" class="btn btn-success btn-small">
+                  <i class="bi bi-pencil"></i>
+                </a>
+  
+                <form action="/edit/<%= element._id %>?_method=DELETE" method="POST" class="position-relative">
+                  <button type="submit" class="btn btn-danger btn-small" data-bs-toggle="modal" id="deleteButton" data-bs-target="#deleteModal">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </form>
+  
+              </div>
+  
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if (books.length > 0) { %>
+    <nav aria-label="Dashboard Pagination">
+      <ul class="pagination justify-content-center mt-5">
+  
+        <% if (current == 1) { %>
+          <li class="page-item disabled"><a href="#" class="page-link">First</a></li>
+        <% } else { %>
+          <li class="page-item"><a href="/?page=1" class="page-link">First</a></li>
+        <% } %>
+  
+        <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+        <% if(i !== 1) { %>
+          <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+        <% } %>
+  
+        <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %>
+          <% if (i == current) { %>
+            <li class="page-item disabled"><a href="#" class="page-link"><%= i %></a></li>
+          <% } else { %>
+            <li class="page-item"><a href="/?page=<%= i %>" class="page-link"><%= i %></a></li>
+          <% } %>
+          <% if (i == Number(current) + 4 && i < pages) { %>
+            <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+          <% } %>
+        <% } %>
+  
+        <% if (current == pages) { %>
+          <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
+        <% } else { %>
+          <li class="page-item"><a href="/?page=<%= pages %>" class="page-link">Last</a></li>
+        <% } %>
+  
+      </ul>
+    </nav>
+  <% } %>
+  
