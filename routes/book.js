@@ -10,4 +10,6 @@ router.put('/edit/:id', bookController.editPost);
 router.put('/toggleRead/:id', bookController.toggleRead);
 router.delete('/edit/:id', bookController.deleteBook);
 
+router.get('*', bookController.getErrorPage);
+
 module.exports = router;

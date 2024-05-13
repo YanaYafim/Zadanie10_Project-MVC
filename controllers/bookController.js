@@ -1,37 +1,9 @@
 const Book = require('../models/Book');
 const mongoose = require('mongoose');
 
-//home
-exports.homepage = async (req, res) => {
-    const messages = await req.flash("info");
-  
-    const locals = {
-      title: "Homepage",
-      description: "List of my books to read",
-    };
-    
-    let perPage = 9;
-    let page = req.query.page || 1;
-  
-    try {
-      const books = await Book.aggregate([{ $sort: { createdAt: -1 } }])
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .exec();
+// error page
 
-      const count = await Book.countDocuments({});
-  
-      res.render("index", {
-        locals,
-        books,
-        current: page,
-        pages: Math.ceil(count / perPage),
-        messages,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+exports.getErrorPage = (req, res) => res.status(404).render('404');
 
 //add book
 
@@ -64,6 +36,37 @@ exports.postBook = async (req, res) => {
 
     res.redirect("/");
     console.log("New book has been added.");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.homepage = async (req, res) => {
+  const messages = await req.flash("info");
+
+  const locals = {
+    title: "Homepage",
+    description: "List of my books to read",
+  };
+  
+  let perPage = 9;
+  let page = req.query.page || 1;
+
+  try {
+    const books = await Book.aggregate([{ $sort: { createdAt: -1 } }])
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec();
+
+    const count = await Book.countDocuments({});
+
+    res.render("index", {
+      locals,
+      books,
+      current: page,
+      pages: Math.ceil(count / perPage),
+      messages,
+    });
   } catch (error) {
     console.log(error);
   }
